@@ -121,39 +121,33 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 		return value;
 	}
 	
-	private void addFirstElement(Node<K, V> result, Node<K, V> tempFirst, Node<K, V> current){
-		first = current;
-		while (tempFirst != null) {
-			current.next = tempFirst;
-			Node<K, V> newFirst = new Node<K, V>(current.key, current.value, current.next, current.down);
-			tempFirst = tempFirst.down;
-			if (tempFirst != null)
-				current.down = newFirst;
-			current = newFirst;
+	private void addFirstElement(Node<K, V> result, Node<K, V> current){
+		result=getPreviousElementAtFirstLevel(result.key, result);
+		current.next=result;
+		for (int i=countLine - 2; i>=0; i--) {
+			Node<K, V> newSkipList = new Node<K, V> (current.key, current.value, listOfPredict[i], current);
+			current=newSkipList;
 		}
+		first=current;
 	}
 	
-	private void addLastElement(Node<K, V> result, Node<K, V> tempFirst, Node<K, V> current){
+	private void addLastElement(Node<K, V> result, Node<K, V> current){
 		result=getPreviousElementAtFirstLevel(result.key,result);
 		result.next=current;
 		for (int i=countLine - 2; i>=0; i--) {
-			Node<K, V> newFirst = new Node<K, V>(current.key, current.value, null, listOfPredict[i+1].next);
-			listOfPredict[i].next=newFirst;
+			Node<K, V> newSkipList= new Node<K, V>(current.key, current.value, null, listOfPredict[i+1].next);
+			listOfPredict[i].next=newSkipList;
 		}
 	}
-	
-	private void addMiddleElement(Node<K, V> result, Node<K, V> tempFirst, Node<K, V> current){
+
+	private void addMiddleElement(Node<K, V> result, Node<K, V> current){
 		current.next = result.next;
 		result.next = current;
-		while (random.newLevel() && countLine > 0) {
-			Node<K, V> newCurrent = new Node<K, V>(current.key, current.value, current.next, current.down);
-			countLine--;
-			newCurrent.next = listOfPredict[countLine].next;
-			listOfPredict[countLine].next = newCurrent;
-			newCurrent.down = current;
-			current = newCurrent;
+		listOfPredict[countLine]=result;
+		for (int i=countLine - 1; i>=0 && random.newLevel(); i--) {
+			Node<K, V> newSkipList = new Node<K, V>(current.key, current.value, listOfPredict[i].next, listOfPredict[i+1].next);
+			listOfPredict[i].next = newSkipList;
 		}
-		
 	}
 	
 	public V put(K key, V value) {
@@ -168,11 +162,11 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 			return replaceExistElement(result, value);			
 		}
 		if (result.key.compareTo(key) > 0) 
-			addFirstElement(result, tempFirst, current);
+			addFirstElement(result, current);
 		else if (result.next == null) 
-			addLastElement(result, tempFirst, current);		
+			addLastElement(result, current);		
 		else 
-			addMiddleElement(result, tempFirst, current);
+			addMiddleElement(result, current);
 		
 		if (first.next.next != null)
 			addLine();
