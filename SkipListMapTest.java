@@ -33,24 +33,6 @@ public class SkipListMapTest extends TestCase {
 		}
 			
 		SkipList<Integer, Integer> skipList = new SkipList<Integer, Integer>(new Random());
-<<<<<<< HEAD
-		SkipList<Integer, Integer> skipListFalse = new SkipList<Integer, Integer>(new Random(queueFalse));
-		SkipList<Integer, Integer> skipListTrue = new SkipList<Integer, Integer>(new Random(queueTrue));
-		SkipList<Integer, Integer> secondSkipList = new SkipList<Integer, Integer>(new Random());
-
-		int[] ArrayOfKeyAndValue = new int[] {1, 0, -5, -7, 2, 1, -3, -100, 100, -5, 0, -101, 101, 50, -50, 44, 45, -25, 11, 49, 64, 33, 18, 0, 4, -2 };
-		SkipList[] ArrayOfSkipList = new SkipList[] {skipList, skipListFalse, skipListTrue};
-		
-		for (int keyAndValue : ArrayOfKeyAndValue) 
-			for (SkipList list : ArrayOfSkipList)
-			AssertPut(list, keyAndValue);
-		
-		for (SkipList list : ArrayOfSkipList) 	
-			assertFalse(list.isEmpty());
-
-		for (int keyAndValue : ArrayOfKeyAndValue) 
-			for (SkipList list : ArrayOfSkipList)
-=======
 		SkipList<Integer, Integer> skipListFalse = new SkipList<Integer, Integer>(new QueueRandom(queueFalse));
 		SkipList<Integer, Integer> skipListTrue = new SkipList<Integer, Integer>(new QueueRandom(queueTrue));
 		SkipList<Integer, Integer> secondSkipList = new SkipList<Integer, Integer>(new Random());
@@ -66,7 +48,6 @@ public class SkipListMapTest extends TestCase {
 
 		for (int keyAndValue : ArrayOfKeyAndValue) 
 			for (SkipList<Integer, Integer> list : ArrayOfSkipList)
->>>>>>> new
 				AssertGet(list, keyAndValue);
 		
 		secondSkipList.putAll(skipList);
@@ -74,17 +55,10 @@ public class SkipListMapTest extends TestCase {
 		assertTrue(secondSkipList.isEmpty());
 
 		for (int keyAndValue : ArrayOfKeyAndValue)
-<<<<<<< HEAD
-			for (SkipList list : ArrayOfSkipList)
-				AssertRemove(list, keyAndValue);
-		
-		for (SkipList list : ArrayOfSkipList) {	
-=======
 			for (SkipList<Integer, Integer> list : ArrayOfSkipList)
 				AssertRemove(list, keyAndValue);
 		
 		for (SkipList<Integer, Integer> list : ArrayOfSkipList) {	
->>>>>>> new
 			assertTrue(list.isEmpty());
 			assertEquals(0, list.size());
 		}
