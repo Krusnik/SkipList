@@ -16,12 +16,14 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 	SkipList(Randomaze randomaze) {
 		this.random = randomaze;
 	}
-	
+
 	private void addLine() {
 		Node<K, V> tempFirst = new Node<K, V>();
 		Node<K, V> tempLast = new Node<K, V>();
-		tempFirst = new Node<K, V>(first.key, first.value, first.next, first.down);
-		tempLast = new Node<K, V>(first.next.next.key, first.next.next.value, first.next.next.next, first.next.next.down);
+		tempFirst = new Node<K, V>(first.key, first.value, first.next,
+				first.down);
+		tempLast = new Node<K, V>(first.next.next.key, first.next.next.value,
+				first.next.next.next, first.next.next.down);
 		tempFirst.down = first;
 		tempLast.down = first.next.next;
 		tempFirst.next = tempLast;
@@ -63,8 +65,8 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 	}
 
 	public boolean containsKey(Object key) {
-		if (first != null){
-			return search(key).key.equals(key);			
+		if (first != null) {
+			return search(key).key.equals(key);
 		}
 		return false;
 	}
@@ -107,20 +109,20 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 		return keys;
 	}
 
-	private V replaceExistElement(Node<K, V> result, V value){
+	private V replaceExistElement(Node<K, V> result, V value) {
 		while (result != null) {
 			result.value = value;
 			result = result.down;
 		}
 		return value;
 	}
-	
-	private V addInEmptyList(Node<K, V> current, V value){
+
+	private V addInEmptyList(Node<K, V> current, V value) {
 		size++;
 		first = current;
 		return value;
 	}
-	
+
 	private void addFirstElement(Node<K, V> result, Node<K, V> current){
 		result=getPreviousElementAtFirstLevel(result.key, result);
 		current.next=result;
@@ -130,7 +132,7 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 		}
 		first=current;
 	}
-	
+
 	private void addLastElement(Node<K, V> result, Node<K, V> current){
 		result=getPreviousElementAtFirstLevel(result.key,result);
 		result.next=current;
@@ -149,7 +151,7 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 			listOfPredict[i].next = newSkipList;
 		}
 	}
-	
+
 	public V put(K key, V value) {
 		Node<K, V> result = search(key);
 		Node<K, V> current = new Node<K, V>(key, value, null, null);
@@ -167,13 +169,13 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 			addLastElement(result, current);		
 		else 
 			addMiddleElement(result, current);
-		
+
 		if (first.next.next != null)
 			addLine();
 		size++;
 		return value;
 	}
-
+	
 	public int size() {
 		return size;
 	}
@@ -197,8 +199,8 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 	}
 
 	private void removeFirstElement(Object key, Node<K, V> result) {
-		countLine=0;
-		result=getPreviousElementAtFirstLevel(first.key, result);
+		countLine = 0;
+		result = getPreviousElementAtFirstLevel(first.key, result);
 		result = result.next;
 		for (int i = countLine - 2; i >= 0; i--)
 			if (result != null && !listOfPredict[i].next.key.equals(result.key)) {
@@ -212,7 +214,7 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 	}
 
 	private void removeLastElement(Object key) {
-		predict=getPreviousElementAtFirstLevel(key, predict);
+		predict = getPreviousElementAtFirstLevel(key, predict);
 		predict.next = null;
 		for (int i = countLine - 1; i >= 0; i--) {
 			if (predict.key == listOfPredict[i].key)
@@ -222,7 +224,8 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 		}
 	}
 
-	private Node<K, V> getPreviousElementAtFirstLevel(Object key, Node<K,V> skipList) {
+	private Node<K, V> getPreviousElementAtFirstLevel(Object key,
+			Node<K, V> skipList) {
 		while (skipList != null) {
 			listOfPredict[countLine++] = skipList;
 			skipList = skipList.down;
@@ -232,7 +235,8 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 	}
 
 	private Node<K, V> getPreviousElementAtLevel(Object key, Node<K, V> skipList) {
-		while (skipList != null && !skipList.key.equals(key) && !skipList.next.key.equals(key)) 
+		while (skipList != null && !skipList.key.equals(key)
+				&& !skipList.next.key.equals(key))
 			skipList = skipList.next;
 		return skipList;
 
@@ -251,9 +255,10 @@ public class SkipList<K extends Comparable<K>, V> implements Map<K, V> {
 	@Override
 	public V remove(Object key) {
 		Node<K, V> result = search(key);
-		if (!result.key.equals(key))
+		if (result == null || !result.key.equals(key))
 			return null;
 		size--;
+
 		V out = result.value;
 		if (size == 0) {
 			first = null;
